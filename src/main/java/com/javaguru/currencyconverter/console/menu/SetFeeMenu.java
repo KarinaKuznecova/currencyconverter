@@ -1,6 +1,6 @@
 package com.javaguru.currencyconverter.console.menu;
 
-import com.javaguru.currencyconverter.service.ConverterService;
+import com.javaguru.currencyconverter.service.RateService;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -9,17 +9,17 @@ import java.math.BigDecimal;
 public class SetFeeMenu implements MenuItem {
 
     private final static String NAME = "Set fee";
-    private ConverterService converterService;
+    private RateService rateService;
     private Reader reader = new Reader();
 
-    public SetFeeMenu(ConverterService converterService) {
-        this.converterService = converterService;
+    public SetFeeMenu(RateService rateService) {
+        this.rateService = rateService;
     }
 
     public void action() {
-        Long id = (long)reader.getUserInput("Enter currency pair id");
+        Long id = (long) reader.getUserInput("Enter currency pair id");
         BigDecimal newFee = BigDecimal.valueOf(reader.getUserInputDouble("Enter new fee:"));
-        converterService.setFee(id, newFee);
+        rateService.setFee(id, newFee);
     }
 
     @Override

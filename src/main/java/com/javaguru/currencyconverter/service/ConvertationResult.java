@@ -1,21 +1,29 @@
 package com.javaguru.currencyconverter.service;
 
-import com.javaguru.currencyconverter.domain.CurrencyPair;
-
 import java.math.BigDecimal;
 
 public class ConvertationResult {
 
-    private final CurrencyPair currencyPair;
+    private final String primaryCurrency;
+    private final String secondaruCurrency;
     private final BigDecimal resultBeforeFees;
     private final BigDecimal fee;
     private final BigDecimal finalResult;
 
-    public ConvertationResult(BigDecimal resultBeforeFees, BigDecimal fee, CurrencyPair currencyPair) {
+    public ConvertationResult(String primaryCurrency, String secondaruCurrency, BigDecimal resultBeforeFees, BigDecimal fee) {
+        this.primaryCurrency = primaryCurrency;
+        this.secondaruCurrency = secondaruCurrency;
         this.resultBeforeFees = resultBeforeFees;
         this.fee = fee;
-        this.currencyPair = currencyPair;
         finalResult = resultBeforeFees.subtract(fee);
+    }
+
+    public String getPrimaryCurrency() {
+        return primaryCurrency;
+    }
+
+    public String getSecondaruCurrency() {
+        return secondaruCurrency;
     }
 
     public BigDecimal getResultBeforeFees() {
@@ -30,13 +38,9 @@ public class ConvertationResult {
         return finalResult;
     }
 
-    public CurrencyPair getCurrencyPair() {
-        return currencyPair;
-    }
-
     @Override
     public String toString() {
-        return currencyPair.getPrimaryCurrency() + " to " + currencyPair.getSecondaryCurrency() + " = " +
-                resultBeforeFees + ". Fee = " + fee + ". Final result = " + finalResult;
+        return primaryCurrency + " to " + secondaruCurrency + " = " + resultBeforeFees +
+                ". Fee: " + fee + ". Final result: " + finalResult;
     }
 }

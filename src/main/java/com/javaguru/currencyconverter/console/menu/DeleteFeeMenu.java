@@ -1,22 +1,22 @@
 package com.javaguru.currencyconverter.console.menu;
 
-import com.javaguru.currencyconverter.service.ConverterService;
+import com.javaguru.currencyconverter.service.RateService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DeleteFeeMenu implements MenuItem {
 
     private final static String NAME = "Remove fee";
-    private ConverterService converterService;
+    private RateService rateService;
     private Reader reader = new Reader();
 
-    public DeleteFeeMenu(ConverterService converterService) {
-        this.converterService = converterService;
+    public DeleteFeeMenu(RateService rateService) {
+        this.rateService = rateService;
     }
 
     public void action() {
-        Long id = (long)reader.getUserInput("Enter currency pair id");
-        converterService.deleteFee(id);
+        Long id = (long) reader.getUserInput("Enter currency pair id");
+        rateService.deleteFee(id);
     }
 
     @Override
