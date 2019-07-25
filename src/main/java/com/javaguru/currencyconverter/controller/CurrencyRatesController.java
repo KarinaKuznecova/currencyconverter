@@ -43,7 +43,7 @@ public class CurrencyRatesController {
         return currencyDTO;
     }
 
-    @PostMapping(path = "/post", consumes = "application/json", produces = "application/json")
+    @PostMapping
     public ResponseEntity<Currency> create(@RequestBody CurrencyDTO currencyDTO) {
         Currency currency = new Currency();
         currency.setBase(currencyDTO.getBase());

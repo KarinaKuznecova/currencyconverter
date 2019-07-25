@@ -1,7 +1,6 @@
 package com.javaguru.currencyconverter.service;
 
 import com.javaguru.currencyconverter.domain.Currency;
-//import com.javaguru.currencyconverter.domain.CurrencyPair;
 import com.javaguru.currencyconverter.domain.Rate;
 import com.javaguru.currencyconverter.repository.CurrencyRepository;
 import com.javaguru.currencyconverter.repository.RatesRepository;
