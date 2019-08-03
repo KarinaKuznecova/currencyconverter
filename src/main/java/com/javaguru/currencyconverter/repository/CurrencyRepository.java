@@ -1,6 +1,7 @@
 package com.javaguru.currencyconverter.repository;
 
 import com.javaguru.currencyconverter.domain.Currency;
+import org.hibernate.SQLQuery;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
@@ -37,6 +38,14 @@ public class CurrencyRepository {
     public void printRates() {
         List<Currency> currency = sessionFactory.getCurrentSession().createCriteria(Currency.class).list();
 
-        currency.stream().forEach((Currency cur) -> System.out.println(cur));
+        currency.forEach((Currency cur) -> System.out.println(cur));
+    }
+
+    public Optional<Currency> getByName(String name) {
+        String query = "select * from currency where base = '" + name + "'";
+        SQLQuery query1 = sessionFactory.getCurrentSession().createSQLQuery(query);
+        query1.addEntity(Currency.class);
+        List<Currency> currencies = query1.list();
+        return Optional.ofNullable(currencies.get(0));
     }
 }

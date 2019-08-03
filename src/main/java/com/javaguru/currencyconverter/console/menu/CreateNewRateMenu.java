@@ -28,7 +28,7 @@ public class CreateNewRateMenu implements MenuItem {
         rate.setCurrencyName(secondaryCurrency);
         rate.setRate(rateValue);
 
-        rateService.createNewRate(rate);
+        rateService.createOrUpdateRate(rate);
     }
 
     @Override

@@ -15,7 +15,7 @@ public class RateService {
         this.ratesRepository = ratesRepository;
     }
 
-    public Rate createNewRate(Rate rate) {
+    public Rate createOrUpdateRate(Rate rate) {
         ratesRepository.createOrUpdateRate(rate);
         return rate;
     }

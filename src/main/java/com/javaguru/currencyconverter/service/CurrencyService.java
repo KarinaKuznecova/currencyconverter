@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -43,7 +44,7 @@ public class CurrencyService {
         return currencyDTO;
     }
 
-    public Currency createNewCurrency(Currency currency) {
+    public Currency createOrUpdateCurrency(Currency currency) {
         currencyRepository.saveOrUpdateCurrency(currency);
         return currency;
     }
@@ -72,5 +73,9 @@ public class CurrencyService {
     public void deleteCurrency(Long id){
         Currency currency = getCurrencyById(id);
         currencyRepository.removeCurrency(currency);
+    }
+
+    public Optional<Currency> getByName(String name){
+        return currencyRepository.getByName(name);
     }
 }

@@ -28,7 +28,7 @@ public class CreateCurrencyMenu implements MenuItem {
             Currency currency = new Currency();
             currency.setBase(currencyCode);
             currency.setDate(dateString);
-            currencyService.createNewCurrency(currency);
+            currencyService.createOrUpdateCurrency(currency);
             System.out.println("Currency with id " + currency.getId() + " created");
         }
     }

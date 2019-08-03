@@ -3,15 +3,15 @@ package com.javaguru.currencyconverter.controller;
 import com.javaguru.currencyconverter.domain.Currency;
 import com.javaguru.currencyconverter.domain.Rate;
 import com.javaguru.currencyconverter.dto.CurrencyDTO;
-import com.javaguru.currencyconverter.repository.RatesRepository;
+import com.javaguru.currencyconverter.mapper.Converter;
 import com.javaguru.currencyconverter.service.CurrencyService;
+import com.javaguru.currencyconverter.service.RateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 @RestController
@@ -19,13 +19,15 @@ import java.util.Set;
 public class CurrencyRatesController {
 
     private CurrencyService currencyService;
-    private RatesRepository ratesRepository;
+    private RateService rateService;
     private RestTemplate restTemplate;
+    private Converter converter;
 
-    public CurrencyRatesController(CurrencyService currencyService, RatesRepository ratesRepository, RestTemplate restTemplate) {
+    public CurrencyRatesController(CurrencyService currencyService, RateService rateService, RestTemplate restTemplate, Converter converter) {
         this.currencyService = currencyService;
-        this.ratesRepository = ratesRepository;
+        this.rateService = rateService;
         this.restTemplate = restTemplate;
+        this.converter = converter;
     }
 
     @GetMapping("/{id}")
@@ -43,17 +45,29 @@ public class CurrencyRatesController {
         return currencyDTO;
     }
 
+    @GetMapping("/byName/{name}")
+    public Currency getByName(@PathVariable("name") String name) {
+        return currencyService.getByName(name).orElseThrow(() -> new IllegalArgumentException());
+    }
+
     @PostMapping
     public ResponseEntity<Currency> create(@RequestBody CurrencyDTO currencyDTO) {
-        Currency currency = new Currency();
-        currency.setBase(currencyDTO.getBase());
-        currency.setDate(currencyDTO.getDate());
-        currencyService.createNewCurrency(currency);
-        Set<Rate> rates = new HashSet<>();
-        currencyDTO.getRates().forEach((String, BigDecimal) -> rates.add(new Rate(String, BigDecimal, currency.getId())));
-        rates.forEach((Rate r) -> ratesRepository.createOrUpdateRate(r));
-        currency.setRates(rates);
-        currencyService.createNewCurrency(currency);
+        Currency currency = converter.convert(currencyDTO);
+        currency.getRates().forEach((rate) -> rateService.createOrUpdateRate(rate));
+        currencyService.createOrUpdateCurrency(currency);
         return ResponseEntity.ok(currency);
+    }
+
+    @PutMapping
+    public ResponseEntity<Currency> update(@RequestBody CurrencyDTO currencyDTO) {
+        Currency currency = converter.convert(currencyDTO);
+        currency.getRates().forEach((rate) -> rateService.createOrUpdateRate(rate));
+        currencyService.createOrUpdateCurrency(currency);
+        return ResponseEntity.ok(currency);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable("id") Long id) {
+        currencyService.deleteCurrency(id);
     }
 }
