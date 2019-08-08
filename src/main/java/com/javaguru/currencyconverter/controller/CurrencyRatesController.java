@@ -1,7 +1,6 @@
 package com.javaguru.currencyconverter.controller;
 
 import com.javaguru.currencyconverter.domain.Currency;
-import com.javaguru.currencyconverter.domain.Rate;
 import com.javaguru.currencyconverter.dto.CurrencyDTO;
 import com.javaguru.currencyconverter.mapper.Converter;
 import com.javaguru.currencyconverter.service.CurrencyService;
@@ -10,12 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.Set;
-
 @RestController
-@RequestMapping("/rates")
+@RequestMapping("api/v1/rates")
 public class CurrencyRatesController {
 
     private CurrencyService currencyService;
@@ -33,16 +28,12 @@ public class CurrencyRatesController {
     @GetMapping("/{id}")
     public CurrencyDTO findRatesById(@PathVariable("id") Long id) {
         Currency currency = currencyService.getCurrencyById(id);
-        Set<Rate> rates = currency.getRates();
-        HashMap<String, BigDecimal> rate = new HashMap<>();
-        rates.forEach((Rate r) -> rate.put(r.getCurrencyName(), r.getRate()));
-        return new CurrencyDTO(currency.getId(), currency.getBase(), currency.getDate(), rate);
+        return converter.convert(currency);
     }
 
     @GetMapping("/actualRates")
     public CurrencyDTO getRatesFromApi() {
-        CurrencyDTO currencyDTO = restTemplate.getForObject("https://api.exchangeratesapi.io/latest", CurrencyDTO.class);
-        return currencyDTO;
+        return currencyService.getRates();
     }
 
     @GetMapping("/byName/{name}")

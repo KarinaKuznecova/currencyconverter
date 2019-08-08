@@ -44,6 +44,10 @@ public class CurrencyService {
         return currencyDTO;
     }
 
+    public CurrencyDTO getRates() {
+        return restTemplate.getForObject("https://api.exchangeratesapi.io/latest", CurrencyDTO.class);
+    }
+
     public Currency createOrUpdateCurrency(Currency currency) {
         currencyRepository.saveOrUpdateCurrency(currency);
         return currency;
@@ -70,12 +74,12 @@ public class CurrencyService {
         currencyRepository.saveOrUpdateCurrency(currency);
     }
 
-    public void deleteCurrency(Long id){
+    public void deleteCurrency(Long id) {
         Currency currency = getCurrencyById(id);
         currencyRepository.removeCurrency(currency);
     }
 
-    public Optional<Currency> getByName(String name){
+    public Optional<Currency> getByName(String name) {
         return currencyRepository.getByName(name);
     }
 }
