@@ -7,7 +7,6 @@ import com.javaguru.currencyconverter.service.CurrencyService;
 import com.javaguru.currencyconverter.service.RateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("api/v1/rates")
@@ -15,13 +14,11 @@ public class CurrencyRatesController {
 
     private CurrencyService currencyService;
     private RateService rateService;
-    private RestTemplate restTemplate;
     private Converter converter;
 
-    public CurrencyRatesController(CurrencyService currencyService, RateService rateService, RestTemplate restTemplate, Converter converter) {
+    public CurrencyRatesController(CurrencyService currencyService, RateService rateService, Converter converter) {
         this.currencyService = currencyService;
         this.rateService = rateService;
-        this.restTemplate = restTemplate;
         this.converter = converter;
     }
 
