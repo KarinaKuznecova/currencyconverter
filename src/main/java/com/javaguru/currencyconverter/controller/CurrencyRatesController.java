@@ -41,7 +41,7 @@ public class CurrencyRatesController {
     @PostMapping
     public ResponseEntity<Currency> create(@RequestBody CurrencyDTO currencyDTO) {
         Currency currency = converter.convert(currencyDTO);
-        currency.getRates().forEach((rate) -> rateService.createOrUpdateRate(rate));
+        currency.getRates().forEach(rate -> rateService.createOrUpdateRate(rate));
         currencyService.createOrUpdateCurrency(currency);
         return ResponseEntity.ok(currency);
     }
@@ -49,7 +49,7 @@ public class CurrencyRatesController {
     @PutMapping
     public ResponseEntity<Currency> update(@RequestBody CurrencyDTO currencyDTO) {
         Currency currency = converter.convert(currencyDTO);
-        currency.getRates().forEach((rate) -> rateService.createOrUpdateRate(rate));
+        currency.getRates().forEach(rate -> rateService.createOrUpdateRate(rate));
         currencyService.createOrUpdateCurrency(currency);
         return ResponseEntity.ok(currency);
     }
