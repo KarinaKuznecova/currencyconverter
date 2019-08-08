@@ -3,6 +3,7 @@ package com.javaguru.currencyconverter.service;
 import com.javaguru.currencyconverter.domain.Currency;
 import com.javaguru.currencyconverter.domain.Rate;
 import com.javaguru.currencyconverter.dto.CurrencyDTO;
+import com.javaguru.currencyconverter.mapper.Converter;
 import com.javaguru.currencyconverter.repository.CurrencyNotFoundException;
 import com.javaguru.currencyconverter.repository.CurrencyRepository;
 import com.javaguru.currencyconverter.repository.RatesRepository;
@@ -10,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class CurrencyService {
@@ -21,27 +19,22 @@ public class CurrencyService {
     private RestTemplate restTemplate;
     private CurrencyRepository currencyRepository;
     private RatesRepository ratesRepository;
+    private Converter converter;
 
     @Autowired
-    public CurrencyService(RestTemplate restTemplate, CurrencyRepository currencyRepository, RatesRepository ratesRepository) {
+    public CurrencyService(RestTemplate restTemplate, CurrencyRepository currencyRepository, RatesRepository ratesRepository, Converter converter) {
         this.restTemplate = restTemplate;
         this.currencyRepository = currencyRepository;
         this.ratesRepository = ratesRepository;
+        this.converter = converter;
         initRates();
     }
 
-    private CurrencyDTO initRates() {
-        CurrencyDTO currencyDTO = restTemplate.getForObject("https://api.exchangeratesapi.io/latest", CurrencyDTO.class);
-        Set<Rate> rates = new HashSet<>();
-        Currency currency = new Currency();
-        currency.setBase(currencyDTO.getBase());
-        currency.setDate(currencyDTO.getDate());
-        currencyRepository.saveOrUpdateCurrency(currency);
-        currencyDTO.getRates().forEach((String code, BigDecimal rate) -> rates.add(new Rate(code, rate, currency.getId())));
-        rates.forEach((Rate r) -> ratesRepository.createOrUpdateRate(r));
-        currency.setRates(rates);
-        currencyRepository.saveOrUpdateCurrency(currency);
-        return currencyDTO;
+    private void initRates() {
+        CurrencyDTO currencyDTO = getRates();
+        Currency currency = converter.convert(currencyDTO);
+        currency.getRates().forEach(rate -> ratesRepository.createOrUpdateRate(rate));
+        createOrUpdateCurrency(currency);
     }
 
     public CurrencyDTO getRates() {
