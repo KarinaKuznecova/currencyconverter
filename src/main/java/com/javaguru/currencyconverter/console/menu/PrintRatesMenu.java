@@ -1,20 +1,20 @@
 package com.javaguru.currencyconverter.console.menu;
 
-import com.javaguru.currencyconverter.service.ConverterService;
+import com.javaguru.currencyconverter.service.CurrencyService;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PrintRatesMenu implements MenuItem {
 
     private final static String NAME = "Print currency rates";
-    private ConverterService converterService;
+    private CurrencyService currencyService;
 
-    public PrintRatesMenu(ConverterService converterService) {
-        this.converterService = converterService;
+    public PrintRatesMenu(CurrencyService currencyService) {
+        this.currencyService = currencyService;
     }
 
     public void action() {
-        converterService.printRates();
+        currencyService.printRates();
     }
 
     @Override
