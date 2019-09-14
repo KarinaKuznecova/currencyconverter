@@ -22,20 +22,15 @@ public class CurrencyRatesController {
         this.converter = converter;
     }
 
-    @GetMapping("/{id}")
-    public CurrencyDTO findRatesById(@PathVariable("id") Long id) {
+    @GetMapping(params = {"id"})
+    public CurrencyDTO findRatesById(@RequestParam("id") Long id) {
         Currency currency = currencyService.getCurrencyById(id);
         return converter.convert(currency);
     }
 
-    @GetMapping("/actualRates")
-    public CurrencyDTO getRatesFromApi() {
-        return currencyService.getRates();
-    }
-
-    @GetMapping("/byName/{name}")
-    public Currency getByName(@PathVariable("name") String name) {
-        return currencyService.getByName(name).orElseThrow(() -> new IllegalArgumentException());
+    @GetMapping(params = {"name"})
+    public Currency getByName(@RequestParam("name") String name) {
+        return currencyService.getByName(name).orElseThrow(IllegalArgumentException::new);
     }
 
     @PostMapping
@@ -46,16 +41,16 @@ public class CurrencyRatesController {
         return ResponseEntity.ok(currency);
     }
 
-    @PutMapping
-    public ResponseEntity<Currency> update(@RequestBody CurrencyDTO currencyDTO) {
+    @PutMapping(params = {"id"})
+    public ResponseEntity<Currency> update(@RequestParam("id") Long id, CurrencyDTO currencyDTO) {
         Currency currency = converter.convert(currencyDTO);
         currency.getRates().forEach(rate -> rateService.createOrUpdateRate(rate));
         currencyService.createOrUpdateCurrency(currency);
         return ResponseEntity.ok(currency);
     }
 
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable("id") Long id) {
+    @DeleteMapping(params = {"id"})
+    public void delete(@RequestParam("id") Long id) {
         currencyService.deleteCurrency(id);
     }
 }

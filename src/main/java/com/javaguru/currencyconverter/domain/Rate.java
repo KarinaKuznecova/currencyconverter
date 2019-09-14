@@ -14,7 +14,7 @@ public class Rate {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "currency")
+    @Column(name = "currency", nullable = false, length = 3)
     private String currencyName;
 
     @Column(name = "rate")

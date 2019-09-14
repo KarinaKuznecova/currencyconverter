@@ -22,7 +22,8 @@ public class CurrencyService {
     private Converter converter;
 
     @Autowired
-    public CurrencyService(RestTemplate restTemplate, CurrencyRepository currencyRepository, RatesRepository ratesRepository, Converter converter) {
+    public CurrencyService(RestTemplate restTemplate, CurrencyRepository currencyRepository, RatesRepository ratesRepository,
+                           Converter converter) {
         this.restTemplate = restTemplate;
         this.currencyRepository = currencyRepository;
         this.ratesRepository = ratesRepository;
